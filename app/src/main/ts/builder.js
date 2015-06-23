@@ -76,7 +76,7 @@ var builder;
                 pingURL: pingURL,
             };
             this._activeBuilds = this._activeBuilds.set(req.id, req);
-            this._terminalAPI.createTerminalWithOpenPorts([65234])
+            this._terminalAPI.createTerminalWithOpenPorts([64321])
                 .then(function (terminal) {
                 console.log('key: ' + terminal.container_key);
                 var agentURL = "http://" + terminal.subdomain + "-64321.terminal.com:";
