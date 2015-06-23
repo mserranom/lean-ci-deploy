@@ -79,7 +79,7 @@ var builder;
             this._terminalAPI.createTerminalWithOpenPorts([65234])
                 .then(function (terminal) {
                 console.log('key: ' + terminal.container_key);
-                var agentURL = terminal.subdomain + ".terminal.com:64321";
+                var agentURL = "http://" + terminal.subdomain + "-64321.terminal.com:";
                 _this._buildService.sendBuildRequest(agentURL, req);
             })
                 .fail(function (error) { return _this._queue.finish(repo); });
