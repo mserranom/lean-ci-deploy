@@ -67,7 +67,7 @@ var builder;
             if (!repo) {
                 return null;
             }
-            var pingURL = 'http://mserranom143-64321.terminal.com/build/pingFinish';
+            var pingURL = 'http://mserranom145-64321.terminal.com/build/pingFinish';
             console.log('starting build on repo: ' + repo.repo);
             var req = {
                 id: new Date().getTime() + "-" + Math.floor(Math.random() * 10000000000),
@@ -79,7 +79,7 @@ var builder;
             this._terminalAPI.createTerminalWithOpenPorts([65234])
                 .then(function (terminal) {
                 console.log('key: ' + terminal.container_key);
-                var agentURL = terminal.subdomain + ".terminal.com:65234";
+                var agentURL = terminal.subdomain + ".terminal.com:64321";
                 _this._buildService.sendBuildRequest(agentURL, req);
             })
                 .fail(function (error) { return _this._queue.finish(repo); });

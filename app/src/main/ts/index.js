@@ -24,7 +24,6 @@ function registerWebhook(repo) {
         .then(function (id) { return console.log('hook ' + id + ' available!'); })
         .fail(function (error) { return console.warn('there was an issue: ' + error.message); });
 }
-console.error(projects.getProjects.length);
 projects.getProjects().forEach(function (project) { return registerWebhook(project.repo); });
 // setup server
 var express = require('express');
