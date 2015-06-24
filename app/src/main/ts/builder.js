@@ -57,7 +57,7 @@ var builder;
                 var request = {
                     id: new Date().getTime() + "-" + Math.floor(Math.random() * 10000000000),
                     repo: repo,
-                    commit: '',
+                    commit: commit,
                     pingURL: pingURL,
                 };
                 this._queue.add(request);
