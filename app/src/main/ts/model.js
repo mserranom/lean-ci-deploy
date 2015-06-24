@@ -2,60 +2,6 @@
 var Immutable = require('immutable');
 var model;
 (function (model) {
-    var BuildQueue = (function () {
-        function BuildQueue() {
-            this._queue = [];
-            this._finished = [];
-            this._activeBuilds = Immutable.Set();
-        }
-        /** adds a project to the queue */
-        BuildQueue.prototype.add = function (repo) {
-            this._queue.push(repo);
-        };
-        /** moves a project to active builds and returns the activated project */
-        BuildQueue.prototype.next = function () {
-            if (this.queueIsEmpty() || this.maxConcurrentBuildsReached()) {
-                return null;
-            }
-            for (var i = 0; i < this._queue.length; i++) {
-                var repo = this._queue[i];
-                if (!this.isActive(repo)) {
-                    this._activeBuilds = this._activeBuilds.add(repo);
-                    this._queue.splice(i, 1);
-                    return repo;
-                }
-            }
-            return null;
-        };
-        /** finishes an active build, removing it from the set of active builds */
-        BuildQueue.prototype.finish = function (repo) {
-            var _this = this;
-            this._activeBuilds = this._activeBuilds.delete(repo);
-            repo.downstreamDependencies.forEach(function (dep) { return _this.add(dep.downstream); });
-            this._finished.push(repo);
-        };
-        /** project builds that are active at the moment */
-        BuildQueue.prototype.activeBuilds = function () {
-            return this._activeBuilds;
-        };
-        BuildQueue.prototype.queue = function () {
-            return this._queue;
-        };
-        BuildQueue.prototype.finished = function () {
-            return this._finished;
-        };
-        BuildQueue.prototype.isActive = function (build) {
-            return this._activeBuilds.some(function (activeBuild) { return activeBuild.repo == build.repo; });
-        };
-        BuildQueue.prototype.maxConcurrentBuildsReached = function () {
-            return this._activeBuilds.count() >= 1;
-        };
-        BuildQueue.prototype.queueIsEmpty = function () {
-            return this._queue.length <= 0;
-        };
-        return BuildQueue;
-    })();
-    model.BuildQueue = BuildQueue;
     var Project = (function () {
         function Project(repo) {
             this.upstreamDependencies = Immutable.Set();
@@ -73,6 +19,58 @@ var model;
         return Project;
     })();
     model.Project = Project;
+    var BuildQueue = (function () {
+        function BuildQueue() {
+            this._queue = [];
+            this._finished = [];
+            this._activeBuilds = Immutable.Set();
+        }
+        /** adds a project to the queue */
+        BuildQueue.prototype.add = function (repo) {
+            this._queue.push(repo);
+        };
+        /** moves a project to active builds and returns the activated project */
+        BuildQueue.prototype.next = function () {
+            if (this.queueIsEmpty() || this.maxConcurrentBuildsReached()) {
+                return null;
+            }
+            for (var i = 0; i < this._queue.length; i++) {
+                var nextRequest = this._queue[i];
+                if (!this.isActive(nextRequest.repo)) {
+                    this._activeBuilds = this._activeBuilds.add(nextRequest);
+                    this._queue.splice(i, 1);
+                    return nextRequest;
+                }
+            }
+            return null;
+        };
+        /** finishes an active build, removing it from the set of active builds */
+        BuildQueue.prototype.finish = function (repo) {
+            this._activeBuilds = this._activeBuilds.delete(repo);
+            this._finished.push(repo);
+        };
+        /** project builds that are active at the moment */
+        BuildQueue.prototype.activeBuilds = function () {
+            return this._activeBuilds;
+        };
+        BuildQueue.prototype.queue = function () {
+            return this._queue;
+        };
+        BuildQueue.prototype.finished = function () {
+            return this._finished;
+        };
+        BuildQueue.prototype.isActive = function (repo) {
+            return this._activeBuilds.some(function (activeBuild) { return activeBuild.repo == repo; });
+        };
+        BuildQueue.prototype.maxConcurrentBuildsReached = function () {
+            return this._activeBuilds.count() >= 1;
+        };
+        BuildQueue.prototype.queueIsEmpty = function () {
+            return this._queue.length <= 0;
+        };
+        return BuildQueue;
+    })();
+    model.BuildQueue = BuildQueue;
     var AllProjects = (function () {
         function AllProjects() {
             this._projects = Immutable.Map();

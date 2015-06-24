@@ -26,26 +26,20 @@ var api;
             });
             app.get('/build/queue', function (req, res) {
                 console.log('received /build/queue GET request');
-                var result = [];
-                _this._queue.queue().forEach(function (project) { return result.push(project.toJSONObject()); });
-                res.send(JSON.stringify(result));
+                res.send(JSON.stringify(_this._queue.queue()));
             });
             app.post('/build/pingFinish', function (req, res) {
                 var buildId = req.query.id;
                 console.log('received /build/pingFinish GET request, build id=' + buildId);
-                _this._builder.pingFinish(buildId, req.body);
+                _this._builder.pingFinish(req.body);
             });
             app.get('/build/active', function (req, res) {
                 console.log('received /build/active GET request');
-                var result = [];
-                _this._queue.activeBuilds().forEach(function (project) { return result.push(project.toJSONObject()); });
-                res.send(JSON.stringify(result));
+                res.send(JSON.stringify(_this._queue.activeBuilds()));
             });
             app.get('/build/finished', function (req, res) {
                 console.log('received /build/active GET request');
-                var result = [];
-                _this._queue.finished().forEach(function (project) { return result.push(project.toJSONObject()); });
-                res.send(JSON.stringify(result));
+                res.send(JSON.stringify(_this._queue.finished()));
             });
         };
         return LeanCIApi;
