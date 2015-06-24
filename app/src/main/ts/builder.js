@@ -42,8 +42,11 @@ var builder;
             this._buildService = service;
             this._terminalAPI = terminalAPI;
         }
-        BuildScheduler.prototype.queueBuild = function (repo) {
+        BuildScheduler.prototype.queueBuild = function (repo, commit) {
             var _this = this;
+            if (!commit) {
+                commit = '';
+            }
             var project = this._data.getProject(repo);
             if (!project) {
                 throw new Error('unknown project: ' + repo);

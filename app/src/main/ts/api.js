@@ -14,7 +14,8 @@ var api;
                 res.end();
                 console.info(JSON.stringify(req.body)); // https://developer.github.com/v3/activity/events/types/#pushevent
                 var repo = req.body.repository.full_name;
-                _this._builder.queueBuild(repo);
+                var commit = req.body.head_commit.id;
+                _this._builder.queueBuild(repo, commit);
             });
             app.post('/build/start', function (req, res) {
                 console.log('received /build/start POST request');
