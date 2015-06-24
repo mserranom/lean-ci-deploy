@@ -7,9 +7,8 @@ exports.when = promises_1.P.when;
 var terminal;
 (function (terminal) {
     var TerminalAPI = (function () {
-        function TerminalAPI(config, sshKey) {
+        function TerminalAPI(config) {
             this._config = config;
-            this._sshKey = sshKey;
         }
         TerminalAPI.prototype.createTerminalWithOpenPorts = function (ports) {
             var _this = this;
@@ -41,7 +40,6 @@ var terminal;
                 requireAuthentication: true,
                 data: {
                     'snapshot_id': this._config.buildAgentId,
-                    'publicKey': this._sshKey,
                     'keep_ram': true,
                     'temporary': true
                 }

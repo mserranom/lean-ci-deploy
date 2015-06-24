@@ -1,8 +1,8 @@
 ///<reference path="terminal.ts"/>
-///<reference path="ssh.ts"/>
 ///<reference path="config.ts"/>
 ///<reference path="model.ts"/>
 ///<reference path='../../../node_modules/immutable/dist/immutable.d.ts'/>
+var config_1 = require('./config');
 var Immutable = require('immutable');
 var builder;
 (function (builder) {
@@ -43,6 +43,7 @@ var builder;
     var BuildScheduler = (function () {
         function BuildScheduler(data, queue, service, terminalAPI) {
             this._activeBuilds = Immutable.Map();
+            this._agents = Immutable.Map();
             this._data = data;
             this._queue = queue;
             this._buildService = service;
@@ -68,7 +69,7 @@ var builder;
             if (!repo) {
                 return null;
             }
-            var pingURL = 'http://mserranom145-64321.terminal.com/build/pingFinish';
+            var pingURL = config_1.config.appUrl + '/build/pingFinish';
             console.log('starting build on repo: ' + repo.repo);
             var req = {
                 id: new Date().getTime() + "-" + Math.floor(Math.random() * 10000000000),
@@ -77,10 +78,11 @@ var builder;
                 pingURL: pingURL,
             };
             this._activeBuilds = this._activeBuilds.set(req.id, req);
-            this._terminalAPI.createTerminalWithOpenPorts([64321])
+            this._terminalAPI.createTerminalWithOpenPorts([config_1.config.defaultPort])
                 .then(function (terminal) {
                 console.log('key: ' + terminal.container_key);
-                var agentURL = "http://" + terminal.subdomain + "-64321.terminal.com/start";
+                _this._agents = _this._agents.set(req.id, terminal);
+                var agentURL = 'http://' + terminal.subdomain + "-" + config_1.config.defaultPort + '.terminal.com/start';
                 _this._buildService.sendBuildRequest(agentURL, req);
             })
                 .fail(function (error) { return _this._queue.finish(repo); });
@@ -95,6 +97,8 @@ var builder;
             this._data.updateDependencies(project.repo, result.buildConfig.dependencies);
             this._activeBuilds = this._activeBuilds.delete(buildId);
             this._queue.finish(project);
+            this._terminalAPI.closeTerminal(this._agents.get(buildId));
+            this._agents = this._agents.remove(buildId);
         };
         return BuildScheduler;
     })();

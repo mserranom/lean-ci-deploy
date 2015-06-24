@@ -33,13 +33,13 @@ var app = express();
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(multer()); // for parsing multipart/form-data
-var server = app.listen(64321, function () {
+var server = app.listen(config_1.config.defaultPort, function () {
     var host = server.address().address;
     var port = server.address().port;
     console.log('http server listening at http://%s:%s', host, port);
 });
 // setup builder
-var terminalApi = new terminal_1.terminal.TerminalAPI(config_1.config.terminal, config_1.config.sshPubKey);
+var terminalApi = new terminal_1.terminal.TerminalAPI(config_1.config.terminal);
 var scheduler = new builder_1.builder.BuildScheduler(projects, queue, new builder_1.builder.BuildService(), terminalApi);
 setInterval(function () { return scheduler.startBuild(); }, 1000);
 // setup rest API
