@@ -36,3 +36,5 @@ _SpecRunner.html
 app
 app.tar.gz
 app.zip
+
+newrelic.js

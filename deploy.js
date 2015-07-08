@@ -16,9 +16,14 @@ exec('rm -rf app.zip app.tar.gz app');
 var encodedConf = exec('cat config.json | base64');
 exec('heroku config:set LEANCI_CONFIG=' + encodedConf.trim() + ' --app leanci');
 
-// creating app tarball
+// extracting app
 shell.cp('../lean-ci/dist.zip', './app.zip');
 exec('unzip -qq app.zip -d app');
+
+//copying config files
+exec('cp ./newrelic.js ./app/newrelic.js');
+
+// creating app tarball
 exec('tar -pczf app.tar.gz app package.json');
 
 // request app upload endpoints to heroku
