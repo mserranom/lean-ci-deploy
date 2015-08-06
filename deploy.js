@@ -16,6 +16,10 @@ exec('rm -rf app.zip app.tar.gz app');
 var encodedConf = exec('cat config.json | base64');
 exec('heroku config:set LEANCI_CONFIG=' + encodedConf.trim() + ' --app leanci');
 
+if(process.argv[2] === 'config') {
+    process.exit();
+}
+
 // extracting app
 shell.cp('../lean-ci/dist.zip', './app.zip');
 exec('unzip -qq app.zip -d app');
