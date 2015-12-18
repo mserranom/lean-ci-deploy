@@ -2,7 +2,7 @@
   "name": "lean-ci-deploy",
   "version": "0.1.0",
   "scripts": {
-    "start": "node app/dist/ES5/src/main/ts/index.js"
+    "start": "node app/dist/src/main/ts/index.js"
   },
   "devDependencies": {
     "shelljs": "^0.5.1"
