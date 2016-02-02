@@ -41,3 +41,5 @@ newrelic.js
 config.json
 
 secrets.txt
+
+dist
