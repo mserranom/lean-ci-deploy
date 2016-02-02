@@ -37,7 +37,7 @@ var endpoints = JSON.parse(data);
 var uploadUrl = endpoints['source_blob']['put_url'];
 var getUrl = endpoints['source_blob']['get_url'];
 var uploadCmd = "curl '" + uploadUrl + "' -X PUT -H 'Content-Type:' --data-binary @app.tar.gz";
-var result = exec(uploadCmd);
+exec(uploadCmd);
 console.log('upload finished!');
 
 // request heroku deploy

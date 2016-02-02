@@ -1,8 +1,11 @@
 {
   "name": "lean-ci-deploy",
   "version": "0.1.0",
+  "engines": {
+    "node": "4.1.0"
+  },
   "scripts": {
-    "start": "node app/dist/src/main/ts/index.js"
+    "start": "node --harmony app/dist/src/main/ts/index.js"
   },
   "devDependencies": {
     "shelljs": "^0.5.1"
